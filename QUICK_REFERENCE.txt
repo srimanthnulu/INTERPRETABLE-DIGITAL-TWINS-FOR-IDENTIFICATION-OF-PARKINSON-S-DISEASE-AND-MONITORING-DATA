@@ -1,0 +1,195 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                    PARKINSON'S DETECTION SYSTEM                               ║
+║                          QUICK REFERENCE CARD                                 ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 📁 PROJECT STRUCTURE                                                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+parkinsons_digital_twin/
+├── train.py              ← Run this to train the model
+├── predict.py            ← Run this for predictions
+├── app/gradio_app.py     ← Run this for web interface
+├── models/vit_model.py   ← Model architectures
+├── utils/                ← Helper modules
+├── data/                 ← PUT YOUR IMAGES HERE
+└── results/              ← Training outputs saved here
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🚀 QUICK START                                                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+1. INSTALL DEPENDENCIES
+   pip install -r requirements.txt
+
+2. ORGANIZE YOUR DATA
+   data/
+   ├── healthy/spiral/      ← Put healthy spiral images here
+   ├── healthy/wave/        ← Put healthy wave images here
+   ├── healthy/handwriting/ ← Put healthy handwriting here
+   ├── parkinsons/spiral/   ← Put PD spiral images here
+   ├── parkinsons/wave/     ← Put PD wave images here
+   └── parkinsons/handwriting/ ← Put PD handwriting here
+
+3. TRAIN MODEL
+   python train.py --epochs 20 --batch_size 16
+
+4. LAUNCH WEB APP
+   python app/gradio_app.py
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 💻 ESSENTIAL COMMANDS                                                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+TRAINING:
+  Basic:     python train.py --epochs 20
+  Advanced:  python train.py --epochs 30 --train_baseline --freeze_base
+  CPU:       python train.py --epochs 10 --batch_size 8
+
+PREDICTION:
+  Single:    python predict.py --model results/vit_best_model.pth \
+                                --image test.png --patient_id P001
+  Batch:     python predict.py --model results/vit_best_model.pth \
+                                --image_dir images/ --output results.csv
+
+WEB APP:
+  Launch:    python app/gradio_app.py
+  Access:    http://localhost:7860
+
+TESTING:
+  Demo:      python demo.py
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 📊 TRAINING PARAMETERS                                                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+--data_dir          Path to dataset (default: data)
+--epochs            Training epochs (default: 20)
+--batch_size        Batch size (default: 16, reduce if GPU memory error)
+--learning_rate     Learning rate (default: 1e-4)
+--freeze_base       Freeze ViT base layers (faster training)
+--train_baseline    Also train CNN for comparison
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🔍 FILE LOCATIONS                                                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+INPUT:
+  Training data:     data/healthy/ and data/parkinsons/
+  Model config:      models/vit_model.py
+
+OUTPUT:
+  Trained model:     results/vit_best_model.pth
+  Training plots:    results/vit_training_history.png
+  Evaluation:        results/vit_evaluation/
+  Predictions:       results/inference/
+  Patient records:   patient_records/[patient_id]/
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🌐 WEB APP USAGE                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+TAB 1: Image Analysis
+  1. Load model (results/vit_best_model.pth)
+  2. Upload image (spiral/wave/handwriting)
+  3. Select image type
+  4. Enter patient ID (optional)
+  5. Click "Analyze Image"
+  → View prediction, probability, and explanation heatmap
+
+TAB 2: Patient Management
+  1. Fill in patient details
+  2. Click "Create Patient Profile"
+  → Patient profile saved
+
+TAB 3: Digital Twin Monitoring
+  1. Enter patient ID
+  2. Click "View Patient History"
+  → See progression charts and test history
+
+TAB 4: Generate Reports
+  1. Enter patient ID
+  2. Click "Generate Report"
+  → Comprehensive patient report
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🐛 TROUBLESHOOTING                                                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Problem: "CUDA out of memory"
+Fix:     python train.py --batch_size 8
+
+Problem: "No module named 'transformers'"
+Fix:     pip install transformers
+
+Problem: "No images found"
+Fix:     Check data/ folder structure, ensure .png or .jpg images
+
+Problem: "Model not found"
+Fix:     Train first: python train.py --epochs 10
+
+Problem: "Gradio won't start"
+Fix:     pip install gradio, or change port in gradio_app.py
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 📈 EXPECTED RESULTS                                                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+After training (20 epochs, good dataset):
+  Accuracy:    85-95%
+  ROC-AUC:     0.90-0.98
+  F1-Score:    0.85-0.94
+
+Files created:
+  vit_best_model.pth     (~330 MB)
+  Training history       (plots)
+  Evaluation metrics     (JSON + plots)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 📚 DOCUMENTATION                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+README.md           - Comprehensive documentation
+USAGE_GUIDE.md      - Detailed step-by-step guide
+demo.py             - System component testing
+requirements.txt    - Python dependencies
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ ⚡ WORKFLOW SUMMARY                                                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+1. Setup:      pip install -r requirements.txt
+2. Data:       Organize images in data/ folder
+3. Train:      python train.py --epochs 20
+4. Verify:     Check results/vit_best_model.pth exists
+5. Test:       python predict.py --model results/vit_best_model.pth \
+                                  --image test.png
+6. Deploy:     python app/gradio_app.py
+7. Use:        Open http://localhost:7860 in browser
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ ⚠️  IMPORTANT NOTES                                                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+• This system is for RESEARCH USE ONLY
+• NOT a medical device - requires professional validation
+• Always consult healthcare professionals for diagnosis
+• Ensure proper patient consent and data privacy compliance
+• Train on representative, balanced datasets for best results
+• GPU recommended but not required (CPU will be slower)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🎯 SYSTEM REQUIREMENTS                                                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Python:     3.8 or higher
+RAM:        8GB minimum, 16GB recommended
+Storage:    10GB free space
+GPU:        Optional (CUDA-capable recommended)
+OS:         Windows, Linux, or macOS
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║  For detailed help, see README.md and USAGE_GUIDE.md                          ║
+║  Last Updated: February 2026                                                  ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
